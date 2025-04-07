@@ -1,8 +1,6 @@
 //II. Personal
 
 import 'package:flutter/material.dart';
-import 'package:file_picker/file_picker.dart';
-import 'package:open_file/open_file.dart';
 import 'package:cmsystem/screens/forms/counselingform_q6.dart';
 
 class CounselingFormQ5 extends StatefulWidget {
@@ -36,18 +34,6 @@ class _CounselingFormQ5State extends State<CounselingFormQ5> {
   bool abuseSexual = false;
 
   String? selectedFileName;
-
-  Future<void> _pickAndOpenFile() async {
-    final result = await FilePicker.platform.pickFiles();
-
-    if (result != null && result.files.single.path != null) {
-      final path = result.files.single.path!;
-      setState(() {
-        selectedFileName = result.files.single.name;
-      });
-      await OpenFile.open(path);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -173,23 +159,9 @@ class _CounselingFormQ5State extends State<CounselingFormQ5> {
             ),
             const Padding(
               padding: EdgeInsets.only(top: 4),
-              child: Text("(Please specify and attach a Medical Certificate)",
-                  style: TextStyle(fontSize: 12)),
+              child: Text("(Please specify)", style: TextStyle(fontSize: 12)),
             ),
             const SizedBox(height: 10),
-            ElevatedButton.icon(
-              onPressed: _pickAndOpenFile,
-              icon: const Icon(Icons.attach_file),
-              label: const Text("Attach a file"),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.pink.shade100,
-                foregroundColor: Colors.black,
-              ),
-            ),
-            if (selectedFileName != null) ...[
-              const SizedBox(height: 8),
-              Text("Selected File: $selectedFileName"),
-            ],
             const SizedBox(height: 10),
             const Text("My drug prescription is / are:"),
             TextField(

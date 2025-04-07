@@ -4,7 +4,6 @@ import 'package:cmsystem/screens/home_screen.dart';
 import 'package:cmsystem/screens/notification/notification_screen.dart';
 import 'package:cmsystem/screens/schedule_screen.dart';
 import 'package:cmsystem/screens/login.dart';
-import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
 class SettingsScreen extends StatefulWidget {
@@ -15,20 +14,6 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  File? _profileImage;
-
-  // Function to pick an image
-  Future<void> _pickImage() async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-
-    if (pickedFile != null) {
-      setState(() {
-        _profileImage = File(pickedFile.path);
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,20 +28,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
               // User Info Section
               Row(
                 children: [
-                  GestureDetector(
-                    onTap: _pickImage, // Tap to pick image
-                    child: CircleAvatar(
-                      backgroundColor: Colors.pink.shade100,
-                      radius: 25,
-                      backgroundImage: _profileImage != null
-                          ? FileImage(_profileImage!)
-                          : null, // Display the picked image
-                      child: _profileImage == null
-                          ? const Icon(
-                              Icons.person,
-                              color: Colors.white,
-                            )
-                          : null, // Default icon if no image is picked
+                  CircleAvatar(
+                    backgroundColor: Colors.pink.shade100,
+                    radius: 25,
+                    child: const Icon(
+                      Icons.person,
+                      color: Colors.white,
                     ),
                   ),
                   const SizedBox(width: 12), // Adjusted spacing
@@ -100,7 +77,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 "Account",
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
-              _buildSettingsItem("Change Display Icon"),
               const Divider(),
 
               // Support Section
@@ -212,9 +188,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       title: Text(title),
       trailing: const Icon(Icons.arrow_outward),
       onTap: () {
-        if (title == "Change Display Icon") {
-          _pickImage(); // Trigger image picker when "Change Display Icon" is tapped
-        }
+        // Add logic for other settings items if needed
       },
     );
   }
