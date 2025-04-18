@@ -1,7 +1,8 @@
 //V. Academics
 
 import 'package:flutter/material.dart';
-import 'package:cmsystem/screens/forms/counselingform_q8.dart';
+import 'package:cmsystem/screens/forms/counselingform_q9.dart'; // Ensure this path is correct
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class CounselingFormQ7 extends StatefulWidget {
   const CounselingFormQ7({super.key});
@@ -228,12 +229,50 @@ class _CounselingFormQ7State extends State<CounselingFormQ7> {
             // Next Button
             Center(
               child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const CounselingFormQ8()),
-                  );
+                onPressed: () async {
+                  try {
+                    // Collect form data
+                    final formData = {
+                      'academicPerformance': academicPerformance,
+                      'homesickness': homesickness,
+                      'teacherIssue': teacherIssue,
+                      'notInterested': notInterested,
+                      'notHappy': notHappy,
+                      'lateInClass': lateInClass,
+                      'lessonDifficulty': lessonDifficulty,
+                      'courseField': courseField.text,
+                      'parentsSeparated': parentsSeparated,
+                      'hardTimeWithParents': hardTimeWithParents,
+                      'familyArguments': familyArguments,
+                      'financialConcerns': financialConcerns,
+                      'genderPreference': genderPreference,
+                      'familyIllness': familyIllness,
+                      'familySpecifyField': familySpecifyField.text,
+                      'familyViolence': familyViolence,
+                      'timestamp': FieldValue.serverTimestamp(), // Add a timestamp
+                    };
+
+                    // Save to Firestore
+                    await FirebaseFirestore.instance
+                        .collection('counseling_forms') // Firestore collection name
+                        .add(formData);
+
+                    // Show success message
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Form submitted successfully!')),
+                    );
+
+                    // Navigate to the next screen
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (_) => const CounselingFormQ9()),
+                    );
+                  } catch (e) {
+                    // Handle errors
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Error: $e')),
+                    );
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   padding:
@@ -244,7 +283,7 @@ class _CounselingFormQ7State extends State<CounselingFormQ7> {
                   ),
                 ),
                 child: const Text(
-                  'Next',
+                  'Submit',
                   style: TextStyle(fontSize: 16, color: Colors.white),
                 ),
               ),
